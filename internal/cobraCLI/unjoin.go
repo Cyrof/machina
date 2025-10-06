@@ -35,12 +35,6 @@ var unjoinCmd = &cobra.Command{
 			return nil
 		}
 
-		bat := filepath.Join("scripts", "unjoin_to_workgroup.bat")
-		fmt.Printf("[*] Unjoin->Workgroup via WMIC (bat): %s\n", workgroup)
-		if err := run.BAT(bat, workgroup); err == nil {
-			return nil
-		}
-
 		ps := filepath.Join("scripts", "unjoin_to_workgroup_wmi.ps1")
 		fmt.Printf("[*] WMIC failed, falling back to WMI (ps1): %s\n", workgroup)
 		return run.PS1(ps, "-Workgroup", workgroup)
