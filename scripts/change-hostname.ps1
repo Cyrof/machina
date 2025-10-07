@@ -1,5 +1,7 @@
 param(
-    [Parameter(Mandatory=$true)] [string]$NewHostname
+    [Parameter(Mandatory=$true)] 
+    [string]$NewHostname
+
     [switch]$Restart
 )
 
