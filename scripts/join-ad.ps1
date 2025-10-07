@@ -9,7 +9,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-func Log($level, $msg) {
+function Log($level, $msg) {
     $ts = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
     Write-Host "[$ts] [$level] $msg"
 }
