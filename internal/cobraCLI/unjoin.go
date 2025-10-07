@@ -12,7 +12,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var workgroup string
+var (
+	workgroup string
+	restart   bool
+)
 
 var unjoinCmd = &cobra.Command{
 	Use:   "unjoin",
@@ -36,12 +39,16 @@ var unjoinCmd = &cobra.Command{
 		}
 
 		ps := filepath.Join("scripts", "unjoin_to_workgroup_wmi.ps1")
-		fmt.Printf("[*] WMIC failed, falling back to WMI (ps1): %s\n", workgroup)
-		return run.PS1(ps, "-Workgroup", workgroup)
+		psArgs := []string{"-Workgroup", workgroup}
+		if restart {
+			psArgs = append(psArgs, "-Restart")
+		}
+		return run.PS1(ps, psArgs...)
 	},
 }
 
 func init() {
 	unjoinCmd.Flags().StringVarP(&workgroup, "workgroup", "w", "WORKGROUP", "Workgroup name")
+	unjoinCmd.Flags().BoolVarP(&restart, "restart", "r", false, "Restart the machine after unjoining")
 	rootCmd.AddCommand(unjoinCmd)
 }
