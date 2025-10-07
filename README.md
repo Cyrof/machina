@@ -29,7 +29,7 @@ Run all commands in **elevated shell (Run as Administrator)**.
 ### 1. Unjoin
 Unjoins the computer from an AD domain and places it into a workgroup (WORKGROUP by default).
 ```powershell
-.\machina unjoin
+.\machina unjoin --restart
 ```
 - Prompts for confirmation before running.
 - Required a local Administrator account for login after unjoining.
