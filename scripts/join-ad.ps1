@@ -1,6 +1,5 @@
 param(
     [Parameter(Mandatory=$true)] [string]$DomainName, 
-    [string]$OUPath,
     [string]$ComputerName = $env:COMPUTERNAME,
     [string]$User,
     [string]$Password,
