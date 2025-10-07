@@ -1,6 +1,6 @@
 param(
     [Parameter(Mandatory=$true)] 
-    [string]$NewHostname,
+    [string]$NewName,
 
     [switch]$Restart
 )
@@ -8,10 +8,10 @@ param(
 $ErrorActionPreference = "Stop"
 
 Write-Host "[*] Current hostname: $env:COMPUTERNAME"
-Write-Host "[*] Changing hostname to: $NewHostname"
+Write-Host "[*] Changing hostname to: $NewName"
 
 try {
-    Rename-Computer -NewName $NewHostname -Force -ErrorAction Stop
+    Rename-Computer -NewName $NewName -Force -ErrorAction Stop
     Write-Host "[+] Hostname updated in registry."
 } catch {
     Write-Error "[x] Failed to change hostname: $($_.Exception.Message)"
