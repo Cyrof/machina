@@ -2,25 +2,58 @@ param(
     [Parameter(Mandatory=$true)] 
     [string]$NewName,
 
-    [switch]$Restart
+    [switch]$Restart,
+    [switch]$Registry,
 )
 
 $ErrorActionPreference = "Stop"
 
-Write-Host "[*] Current hostname: $env:COMPUTERNAME"
-Write-Host "[*] Changing hostname to: $NewName"
+function Log($lvl, $msg) {
+    $ts=(Get-Date).ToString("yyyy-MM-dd HH:mm:ss")
+    Write-Host "[$ts][$lvl] $msg"
+}
 
-try {
-    Rename-Computer -NewName $NewName -Force -ErrorAction Stop
-    Write-Host "[+] Hostname updated in registry."
-} catch {
-    Write-Error "[x] Failed to change hostname: $($_.Exception.Message)"
+function Fail($m) {
+    Log "ERROR" $m
     exit 1
 }
 
-if ($Restart) {
-    Write-Host "[*] Restarting to apply hostname..."
-    Restart-Computer -Force
-} else {
-    Write-Host "[i] Reboot required for hostname change to take effect."
+function Set-RegHost($name) {
+    $paths = @(
+        "HKLM:\SYSTEM\CurrentControlSet\Control\ComputerName\ActiveComputerName",
+        "HKLM:\SYSTEM\CurrentControlSet\Control\ComputerName\ComputerName",
+        "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters"
+    )
+    Log INFO "Updating registry keys for hostname: $name"
+    Set-ItemProperty -Path $paths[0] -Name 'ComputerName' -value $name
+    Set-ItemProperty -Path $paths[1] -Name 'ComputerName' -value $name
+    Set-ItemProperty -Path $paths[2] -Name 'Hostname' -value $name
+    Set-ItemProperty -Path $paths[2] -Name 'NVHostname' -value $name
+    Log INFO "Registry keys updated."
+}
+
+try {
+    Log INFO "Current hostname: $env:COMPUTERNAME"
+    Log INFO "Request hostname: $NewName"
+
+    if ($Registry) {
+        $cs = Get-CimInstance Win32_ComputerSystem
+        if ($cs.PartOfDomain) {
+            Log INFO "Domain detected: $($cs.Domain) - AD object will NOT be updated."
+        }
+        Set-RegHost $NewName
+    } else {
+        Log INFO "Using Rename-Computer to change hostname."
+        Rename-Computer -NewName $NewName -Force -ErrorAction Stop
+        Log INFO "Hostname updated via Rename-Computer."
+    }
+
+    if ($Restart) {
+        Log INFO "Restarting now..."
+        Restart-Computer -Force
+    } else {
+        Log INFO "Reboot required for hostname change to take effect."
+    }
+} catch {
+    Fail $_.Exception.Message
 }
