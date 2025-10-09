@@ -1,5 +1,19 @@
 # Changelog 
 
+## [v1.0.0] - 09-10-2025
+### Breaking Changes
+- All PowerShell scripts (`join`, `unjoin`, and `hostname`) are now **embedded** into the `machina.exe` binary.
+- The external `scripts/` folder is no longer required for runtime.
+- Commands that previously loaded `.ps1` files from disk now executes from temporary embedded copies.
+
+### Changed
+- `change-hostname.ps1`, `join-ad.ps1`, and `unjoin_to_workgroup.ps1` now run entirely from embedded resources.
+- CLI commands now call `run.PS1Embedded()` internally instead of reading from disk.
+
+### Fixed
+- Removed dependecy on local script paths when running `machina.exe` directly.
+- Eliminated `0xfff0000` errors caused by missing script files when executed standalone.
+
 ## [v0.3.1] - 09-10-2025
 ### Added
 - `--registry` flag for `hostname` command to force hostname changes by directly editing registry keys.
