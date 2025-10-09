@@ -3,7 +3,7 @@ param(
     [string]$NewName,
 
     [switch]$Restart,
-    [switch]$Registry,
+    [switch]$Registry
 )
 
 $ErrorActionPreference = "Stop"
