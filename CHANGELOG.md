@@ -1,5 +1,14 @@
 # Changelog 
 
+## [v0.3.1] - 09-10-2025
+### Added
+- `--registry` flag for `hostname` command to force hostname changes by directly editing registry keys.
+- `--yes` flag to bypass confirmation when using `--registry`.
+- Cobra-based confirmation prompt before applying forced hostname changes.
+
+### Changed
+- Removed in-script prompting from `change-hostname.ps1`; all confirmation is handled in Cobra.
+
 ## [v0.3.0] - 07-10-2025
 ### Added 
 - Logging and error handling in `unjoin` script (`unjoin_to_workgroup_wmi.ps1`).

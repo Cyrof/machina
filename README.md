@@ -60,9 +60,22 @@ Changes the computer hostname.
 # Change hostname and restart immediately
 .\machina hostname --name NEW-PC --restart
 ```
+#### Force rename via registry (bypasses domain restrictions)
+Use this if the machine is still domain-joined and `Rename-Computer` is blocked:
+```powershell
+.\machina hostname --name NEW-PC --registry
+```
+You will be asked to confirm unless you use `--yes`:
+```powershell
+.\machina hostname --name NEW-PC --registry --yes
+```
 Options:
 - `--name` (_require_): New hostname.
 - `--restart`: Restart immediately after renaming.
+- `--registry`: Force rename hostname via registry (WILL not change in AD).
+- `--yes`: Skip confirmation when using `--registry`.
+
+> **Important note**: Using `--registry` does **not** update the AD computer object. After reboot, the local machine will use the new name, but AD may still reference the old one until you manually update it or rejoin.
 
 ---
 
