@@ -5,7 +5,7 @@ import (
 	"io/fs"
 )
 
-// go:embed ps1/*.ps1
+//go:embed ps1/*.ps1
 var ps1FS embed.FS
 
 func ReadPS1(name string) (string, error) {
