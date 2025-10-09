@@ -28,7 +28,7 @@ function Set-RegHost($name) {
     Set-ItemProperty -Path $paths[0] -Name 'ComputerName' -value $name
     Set-ItemProperty -Path $paths[1] -Name 'ComputerName' -value $name
     Set-ItemProperty -Path $paths[2] -Name 'Hostname' -value $name
-    Set-ItemProperty -Path $paths[2] -Name 'NVHostname' -value $name
+    Set-ItemProperty -Path $paths[2] -Name 'NV Hostname' -value $name
     Log INFO "Registry keys updated."
 }
 
