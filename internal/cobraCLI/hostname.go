@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"path/filepath"
 	"strings"
 
 	"github.com/Cyrof/machina/internal/run"
@@ -39,7 +38,6 @@ var hostnameCmd = &cobra.Command{
 			}
 		}
 
-		ps := filepath.Join("scripts", "change-hostname.ps1")
 		argsPS := []string{"-NewName", newHostname}
 		if autoRestart {
 			argsPS = append(argsPS, "-Restart")
@@ -47,7 +45,7 @@ var hostnameCmd = &cobra.Command{
 		if useRegistry {
 			argsPS = append(argsPS, "-Registry")
 		}
-		return run.PS1(ps, argsPS...)
+		return run.PS1Embedded("change-hostname.ps1", argsPS...)
 	},
 }
 

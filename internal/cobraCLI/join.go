@@ -2,7 +2,6 @@ package cobracli
 
 import (
 	"fmt"
-	"path/filepath"
 	"strings"
 
 	"github.com/Cyrof/machina/internal/run"
@@ -29,7 +28,6 @@ var joinCmd = &cobra.Command{
 			return fmt.Errorf("provide --prompt or both --user and --password")
 		}
 
-		ps := filepath.Join("scripts", "join-ad.ps1")
 		argsPS := []string{
 			"-Domain", adDomain,
 		}
@@ -48,7 +46,7 @@ var joinCmd = &cobra.Command{
 		if adRestart {
 			argsPS = append(argsPS, "-Restart")
 		}
-		return run.PS1(ps, argsPS...)
+		return run.PS1Embedded("join-ad.ps1", argsPS...)
 	},
 }
 

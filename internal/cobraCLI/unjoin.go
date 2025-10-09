@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"path/filepath"
 	"strings"
 
 	"github.com/Cyrof/machina/internal/run"
@@ -38,12 +37,11 @@ var unjoinCmd = &cobra.Command{
 			return nil
 		}
 
-		ps := filepath.Join("scripts", "unjoin_to_workgroup_wmi.ps1")
 		psArgs := []string{"-Workgroup", workgroup}
 		if restart {
 			psArgs = append(psArgs, "-Restart")
 		}
-		return run.PS1(ps, psArgs...)
+		return run.PS1Embedded("unjoin_to_workgroup.ps1", psArgs...)
 	},
 }
 
