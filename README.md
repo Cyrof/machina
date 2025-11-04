@@ -77,6 +77,57 @@ Options:
 
 > **Important note**: Using `--registry` does **not** update the AD computer object. After reboot, the local machine will use the new name, but AD may still reference the old one until you manually update it or rejoin.
 
+### 4. Cleanup
+Remvoes Log files, registry entries, temporary data, and other lingering artifacts left behind by Windows provisioning, testing, or Machina operation &emdash; based on a user-defined configuration file.
+
+```powershell
+# Preview cleanup actions (no deletion)
+.\machina clean -f C:\cleanup.json --dry-run
+
+# Execute cleanup with confirmation
+.\machina clean -f C:\cleanup.json
+
+# Force cleanup without confirmation (non-interactive)
+.\machina clean -f C:\cleanup.json --force
+
+# Show full target lists before confirmation 
+.\machina clean -f C:\cleanup.json --verbose
+```
+
+#### Example configuration file (`cleanup.json`)
+```json 
+{
+    "LogDirs": [
+        "C:\\Machina\\Logs",
+        "C:\\Windows\\Panter"
+    ],
+    "TempFiles": [
+        "C:\\Windows\\Temp\\*",
+        "C:\\Users\\Public\\*.bak"
+    ],
+    "RegKeys": [
+        "HKLM:\\Software\\Machina",
+        "HKCU:\\Software\\Machina"
+    ],
+    "Services": [
+        "MachinaAgentTmp",
+        "SetupDiag"
+    ],
+    "ExtraPaths": [
+        "C:\\ProgramData\\Machina\\cache",
+        "C:\\Users\\Public\\Documents\\Old_Provision_files"
+    ]
+}
+```
+Options: 
+- `--file` (_required_): Path to the cleanup configuration JSON.
+- `--dry-run`: Displays what would be deleted without making changes.
+- `--force`: Skips confirmation prompts.
+- `--verbose`: Shows full target lists before execution.
+
+> **Tip**: You can target **any directories or registry keys** &emdash; not just Machina's own. 
+> This is ideal for post-provisioning cleanup in lab, CI/CD, or imaging workflows.
+
 ---
 
 ## Notes 
