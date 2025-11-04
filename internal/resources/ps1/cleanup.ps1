@@ -73,7 +73,7 @@ function Remove-PathSafe {
             }
         }
     } catch {
-        Log "ERROR" "Failed removing $p: $($_.Exception.Message)"
+        Log "ERROR" "Failed removing ${p}: $($_.Exception.Message)"
     }
 }
 
@@ -89,7 +89,7 @@ function Remove-RegKeySafe {
             Log "WARN" "Registry key not found: $rk"
         }
     } catch {
-        Log "ERROR" "Failed removing registry $rk: $($_.Exception.Message)"
+        Log "ERROR" "Failed removing registry ${rk}: $($_.Exception.Message)"
     }
 }
 
@@ -109,7 +109,7 @@ function Stop-Delete-ServiceSafe {
             Log "WARN" "Service not found: $svcName"
         }
     } catch {
-        Log "ERROR" "Failed deleting service $svcName: $($_.Exception.Message)"
+        Log "ERROR" "Failed deleting service ${svcName}: $($_.Exception.Message)"
     }
 }
 
