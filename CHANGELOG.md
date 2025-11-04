@@ -1,5 +1,17 @@
 # Changelog 
 
+## [v1.1.0] - 04-11-2025
+### Added 
+- New `clean` command for performing **system cleanup operations**.
+    - Supports removal of log files, registry entries. temporary files, and other lingering artifacts from **Windows provisioning** or **Machina runs**.
+    - Requires a configuration file (`--file <path>`) defining cleanup targets.
+
+### Changed
+- Documentation (`README.md`) updated with cleanup usage examples and `cleanup-json`.
+
+### Fixed
+- Corrected PowerShell variable interpolation in embedded scripts to prevent syntax errors during cleanup execution.
+
 ## [v1.0.0] - 09-10-2025
 ### Breaking Changes
 - All PowerShell scripts (`join`, `unjoin`, and `hostname`) are now **embedded** into the `machina.exe` binary.
