@@ -54,7 +54,7 @@ try{
 
     if ($OU){
         $ouPath = ($OU | ForEach-Object { "OU=$_" }) -join ","
-        $dcPath = ($DomainName -split "\.") | ForEach-Object { "DC=$_"} -join ","
+        $dcPath = ($DomainName -split "\." | ForEach-Object { "DC=$_"} ) -join ","
         $fullOU = "$ouPath,$dcPath"
         Log "INFO" "Target OU path resolve to: $fullOU"
         $addParams["OUPath"] = $fullOU
