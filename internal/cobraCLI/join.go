@@ -15,6 +15,7 @@ var (
 	adPrompt  bool
 	adRestart bool
 	adDNS     string
+	adOU      string
 )
 
 var joinCmd = &cobra.Command{
@@ -29,20 +30,34 @@ var joinCmd = &cobra.Command{
 		}
 
 		argsPS := []string{
-			"-Domain", adDomain,
+			"-DomainName", adDomain,
 		}
+
 		if adPrompt {
 			argsPS = append(argsPS, "-PromptForCredentials")
 		} else {
 			argsPS = append(argsPS, "-User", adUser, "-Password", adPass)
 		}
+
 		if adDNS != "" {
-			parts := strings.Split(adDNS, ",")
-			for i := range parts {
-				parts[i] = strings.TrimSpace(parts[i])
+			for p := range strings.SplitSeq(adDNS, ",") {
+				ip := strings.TrimSpace(p)
+				if ip == "" {
+					continue
+				}
+				argsPS = append(argsPS, "-DNSServers", ip)
 			}
-			argsPS = append(argsPS, "-DNSServer", strings.Join(parts, ","))
 		}
+
+		if adOU != "" {
+			for p := range strings.SplitSeq(adOU, ",") {
+				ou := strings.TrimSpace(strings.Trim(p, "[]\" "))
+				if ou != "" {
+					argsPS = append(argsPS, "-OU", ou)
+				}
+			}
+		}
+
 		if adRestart {
 			argsPS = append(argsPS, "-Restart")
 		}
@@ -57,6 +72,7 @@ func init() {
 	joinCmd.Flags().StringVar(&adPass, "password", "", "Password for the AD user (used if --prompt=false)")
 	joinCmd.Flags().BoolVar(&adRestart, "restart", false, "Restart the machine after joining the domain")
 	joinCmd.Flags().StringVar(&adDNS, "dns", "", "Comma-separated list of DNS servers to use (e.g., 192.168.100.60, 1.1.1.1)")
+	joinCmd.Flags().StringVar(&adOU, "ou", "", "Target OU distinguished name (e.g., \"OU=Clients,OU=Workstations,DC=domain,DC=local\")")
 
 	rootCmd.AddCommand(joinCmd)
 }
