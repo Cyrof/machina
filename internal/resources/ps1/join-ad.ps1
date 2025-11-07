@@ -5,6 +5,7 @@ param(
     [string]$Password,
     [switch]$PromptForCredentials,
     [string[]]$DNSServers,
+    [string[]]$OU,
     [switch]$Restart
 )
 
@@ -43,8 +44,24 @@ try{
         Fail "Either provide User and Password or use -PromptForCredentials"
     }
 
+    $addParams = @{
+        ComputerName = $ComputerName
+        DomainName = $DomainName
+        Credential = $cred
+        ErrorAction = 'Stop'
+        Force = $true
+    }
+
+    if ($OU){
+        $ouPath = ($OU | ForEach-Object { "OU=$_" }) -join ","
+        $dcPath = ($DomainName -split "\." | ForEach-Object { "DC=$_"} ) -join ","
+        $fullOU = "$ouPath,$dcPath"
+        Log "INFO" "Target OU path resolve to: $fullOU"
+        $addParams["OUPath"] = $fullOU
+    }
+
     Log "INFO" "Joining computer '$ComputerName' to domain '$DomainName'"
-    Add-Computer -ComputerName $ComputerName -DomainName $DomainName -Credential $cred -ErrorAction Stop -Force
+    Add-Computer @addParams
     LOG "OK" "Successfully joined $ComputerName to $DomainName"
 
     $cs = Get-WmiObject Win32_ComputerSystem
